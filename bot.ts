@@ -1,20 +1,21 @@
-// bot.ts
 import { Telegraf, Markup } from 'telegraf';
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 
-const bot = new Telegraf('YOUR_BOT_TOKEN');
+const bot = new Telegraf(process.env.BOT_TOKEN || '');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 let currentNumber = 0;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 bot.command('start', (ctx) => {
     ctx.reply(`Текущее число: ${currentNumber}`, Markup.keyboard([
-        Markup.button.webApp('Открыть веб-приложение', 'https://your-webapp-url.com')
+        Markup.button.webApp('Открыть веб-приложение', `${process.env.WEBAPP_URL || 'https://your-render-url.onrender.com'}`)
     ]));
 });
 
